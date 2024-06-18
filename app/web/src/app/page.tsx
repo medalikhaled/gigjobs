@@ -1,15 +1,23 @@
+"use client";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { FilePlusIcon, GearIcon, PersonIcon } from "@radix-ui/react-icons";
 import { MapPinIcon } from "@heroicons/react/20/solid";
+import { useState } from "react";
 
 export default function HomePage() {
+  const [dark, setDark] = useState<boolean>(true);
   const authed = false;
+
   return (
-    <main className="bg-background dark flex min-h-screen flex-col items-center text-white">
+    <main
+      className={`${dark && "dark"} flex min-h-screen flex-col items-center bg-background text-foreground`}
+    >
       <nav className="flex w-full items-center justify-between px-8 py-4 md:px-20">
-        <Button variant="default">Open sidebar</Button>
+        <Button variant="default" onClick={() => setDark((prev) => !prev)}>
+          Open sidebar
+        </Button>
         <div>
           {authed ? (
             <Link href="/login">Login</Link>
@@ -23,7 +31,7 @@ export default function HomePage() {
 
       <section className="flex w-full flex-1 flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-2 rounded-2xl md:w-2/3 md:flex-row md:gap-1">
-          <div className="border-input dark:border-foreground flex h-12 items-center justify-center gap-1 rounded-md border-0 bg-transparent p-2 shadow-sm transition-colors md:w-1/3 md:rounded-l-3xl md:rounded-r-none md:border">
+          <div className="flex h-12 items-center justify-center gap-1 rounded-md border-0 border-input bg-transparent p-2 shadow-sm transition-colors dark:border-foreground md:w-1/3 md:rounded-l-3xl md:rounded-r-none md:border">
             <Button variant="link" size="sm" className="">
               {/*
             opens up a drawer to set more parameter 
@@ -43,7 +51,7 @@ export default function HomePage() {
           <Input
             type="text"
             placeholder="E.g: Senior DevOps Engineer"
-            className="dark:border-foreground h-12 rounded-md py-4 text-base font-normal transition-colors md:rounded-l-none md:rounded-r-3xl focus:dark:border-indigo-400 focus:dark:ring-indigo-400"
+            className="h-12 rounded-md border-foreground py-4 text-base font-normal transition-colors focus:border-indigo-500 focus:ring-indigo-500 focus:dark:border-indigo-400 focus:dark:ring-indigo-400 md:rounded-l-none md:rounded-r-3xl"
           />
         </div>
 
