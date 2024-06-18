@@ -14,8 +14,33 @@ tasks:
     cmds:
       - echo "Intalling all required dependencies"
       #TODO: node, pnpm, turso, kubctl, kind
+
+  #*** ------------t3 web app----------- ***#
+  web:dev:
+    cmd: cd ./app/web && pnpm dev
+    silent: true
+  web:start:
+    deps:
+      - web:build
+    cmd: cd ./app/web && pnpm start
+    silent: true
+  web:lint:
+    cmd: cd ./app/web && pnpm lint
+    silent: true
+  web:build:
+    cmd: cd ./app/web && pnpm build
+    silent: true
   web:db:push:
     cmd: cd ./app/web && pnpm db:push
     silent: true
-  web:dev:
-    cmd: pnpm dev
+  web:db:generate:
+    cmd: cd ./app/web && pnpm db:generate
+    silent: true
+  web:db:migrate:
+    cmd: cd ./app/web && pnpm db:migrate
+    silent: true
+  web:db:studio:
+    cmd: cd ./app/web && pnpm db:studio
+    silent: true
+
+  #*** ----------------------- ***#

@@ -1,37 +1,62 @@
 import Link from "next/link";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { FilePlusIcon, GearIcon, PersonIcon } from "@radix-ui/react-icons";
+import { MapPinIcon } from "@heroicons/react/20/solid";
 
 export default function HomePage() {
+  const authed = false;
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+    <main className="bg-background dark flex min-h-screen flex-col items-center text-white">
+      <nav className="flex w-full items-center justify-between px-8 py-4 md:px-20">
+        <Button variant="default">Open sidebar</Button>
+        <div>
+          {authed ? (
+            <Link href="/login">Login</Link>
+          ) : (
+            <Button variant="ghost" size="icon">
+              <PersonIcon className="h-6 w-6" />
+            </Button>
+          )}
         </div>
-      </div>
+      </nav>
+
+      <section className="flex w-full flex-1 flex-col items-center justify-center">
+        <div className="container flex flex-col items-center justify-center gap-2 rounded-2xl md:w-2/3 md:flex-row md:gap-1">
+          <div className="border-input dark:border-foreground flex h-12 items-center justify-center gap-1 rounded-md border-0 bg-transparent p-2 shadow-sm transition-colors md:w-1/3 md:rounded-l-3xl md:rounded-r-none md:border">
+            <Button variant="link" size="sm" className="">
+              {/*
+            opens up a drawer to set more parameter 
+            if authed set them to the user, store them to local storage and suggest logging in
+            */}
+              <GearIcon className="h-5 w-5 text-indigo-300" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="w-full bg-transparent md:dark:bg-indigo-600"
+            >
+              <p className="hidden md:inline-block">Upload CV</p>
+              <FilePlusIcon className="h-5 w-5 md:ml-2" />
+            </Button>
+          </div>
+          <Input
+            type="text"
+            placeholder="E.g: Senior DevOps Engineer"
+            className="dark:border-foreground h-12 rounded-md py-4 text-base font-normal transition-colors md:rounded-l-none md:rounded-r-3xl focus:dark:border-indigo-400 focus:dark:ring-indigo-400"
+          />
+        </div>
+
+        <div className="flex w-2/3 items-center justify-center gap-2 py-4">
+          <MapPinIcon className="hidden size-4 text-indigo-400" />
+
+          <p className="text-center text-sm italic text-slate-400 md:w-[70ch]">
+            Location set to{" "}
+            <span className="text-indigo-400">Sfax, Tunisia</span>. To change,
+            use the <span className="text-indigo-300">gear icon</span>.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }
