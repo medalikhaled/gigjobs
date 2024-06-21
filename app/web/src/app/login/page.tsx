@@ -66,13 +66,10 @@ export default function Login() {
         <Meteors number={20} />
       </div>
       <div className="hidden bg-muted lg:block">
-        <Image
-          // TODO
-          src="/placeholder.svg"
+        <img
+          src="/placeholder.jpg"
           alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="max-h-screen w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
     </main>

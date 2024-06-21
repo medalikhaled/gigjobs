@@ -7,52 +7,33 @@ import {
   GearIcon,
   MoonIcon,
   PersonIcon,
+  SunIcon,
 } from "@radix-ui/react-icons";
 import { MapPinIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
 import { BackgroundGradientAnimation } from "~/components/animations/background-gradient-animation";
 import { SparklesCore } from "~/components/animations/sparkles";
+import { Meteors } from "~/components/animations/metors";
+import SettingDrawer from "./(components)/setting-drawer";
 
 export default function HomePage() {
-  const [dark, setDark] = useState<boolean>(true);
-  const authed = false;
-
   return (
     <main
-      className={`${dark && "dark"} flex min-h-screen flex-col items-center bg-background text-foreground`}
+      className={`z-0 flex h-screen flex-col items-center bg-background text-foreground`}
     >
-      <nav className="z-50 flex w-full items-center justify-between px-8 py-4 md:px-20">
-        <Button variant="default" onClick={() => null}>
-          Open sidebar
-        </Button>
-
-        <div className="flex items-center justify-center gap-2">
-          {authed ? (
-            <Link href="/login">Login</Link>
-          ) : (
-            <Link href="/login" className="h-6 w-6">
-              <PersonIcon className="h-6 w-6" />
-            </Link>
-          )}
-
-          <Button variant="default" onClick={() => setDark((prev) => !prev)}>
-            <MoonIcon className="h-6 w-6" />
-          </Button>
-        </div>
-      </nav>
-
       {/* <HeaderSparkles /> */}
-
       <section className="flex w-full flex-1 flex-col items-center justify-center">
+        <Meteors
+          number={50}
+          className="dark:bg-indigo-800-700 before:from-teal-400 dark:before:from-red-400"
+        />
+
         <div className="container flex flex-col items-center justify-center gap-2 rounded-2xl md:w-2/3 md:flex-row md:gap-1">
           <div className="flex h-12 items-center justify-center gap-1 rounded-md border-0 border-foreground bg-transparent p-2 shadow-sm transition-colors md:w-1/3 md:rounded-l-3xl md:rounded-r-none md:border">
-            <Button variant="link" size="sm" className="">
-              {/*
+            {/* 
             opens up a drawer to set more parameter 
             if authed set them to the user, store them to local storage and suggest logging in
             */}
-              <GearIcon className="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
-            </Button>
+            <SettingDrawer />
             <Button
               variant="outline"
               size="sm"
