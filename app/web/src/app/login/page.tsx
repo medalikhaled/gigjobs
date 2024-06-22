@@ -54,10 +54,16 @@ export default function Login() {
             >
               Login with Google
             </Button>
+            <Button
+              variant="outline"
+              className="w-full hover:bg-indigo-200 dark:hover:bg-violet-700 dark:hover:bg-opacity-60"
+            >
+              Login with Discord
+            </Button>
           </div>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="#" className="underline">
+            <Link href="/signup" className="underline">
               Sign up
             </Link>
           </div>
