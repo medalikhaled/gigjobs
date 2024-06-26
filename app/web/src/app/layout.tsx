@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "~/components/theme-provider";
 import Navigation from "./(components)/navigation";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata = {
   title: "Gig Jobs",
@@ -21,17 +22,19 @@ export default function RootLayout({
       className={`${GeistSans.variable}`}
       suppressHydrationWarning
     >
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <body>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <Navigation />
-          {children}
-        </body>
-      </ThemeProvider>
+        </ThemeProvider>
+        {children}
+
+        <Toaster />
+      </body>
     </html>
   );
 }

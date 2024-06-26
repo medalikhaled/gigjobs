@@ -1,5 +1,8 @@
+"use client";
+
 import { GearIcon } from "@radix-ui/react-icons";
-import { Button } from "~/components/ui/button";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   Drawer,
   DrawerClose,
@@ -11,8 +14,28 @@ import {
   DrawerTrigger,
 } from "~/components/ui/drawer";
 import { Input } from "~/components/ui/input";
+import { useLocationStore } from "~/stores/userData";
 
 export default function SettingDrawer() {
+  const { location, changeLocation } = useLocationStore();
+  const [newLocation, setNewLocation] = useState<string>("");
+
+  const checkValidLocationAndUpdate = () => {
+    if (!newLocation || newLocation.split(",").length !== 2) {
+      //   toast("Event has been created", {
+      //     description: "Sunday, December 03, 2023 at 9:00 AM",
+      //     action: {
+      //       label: "Undo",
+      //       onClick: () => console.log("Undo"),
+      //     },
+      //     duration: 50000,
+      //   });
+
+      return;
+    }
+    changeLocation(newLocation);
+  };
+
   return (
     <Drawer>
       <DrawerTrigger>
@@ -25,15 +48,20 @@ export default function SettingDrawer() {
             <DrawerTitle>Change your location</DrawerTitle>
             <DrawerDescription>
               current location set to{" "}
-              <span className="italic text-indigo-400">{"Sfax, Agareb"}</span>
+              <span className="italic text-indigo-400">{location}</span>
             </DrawerDescription>
-            <Input className="my-4 w-full" type="text" />
+            <Input
+              className="my-4 w-full"
+              type="text"
+              onChange={(e) => setNewLocation(e.target.value)}
+            />
           </div>
           <div>
             <DrawerTitle>Add some context</DrawerTitle>
             <DrawerDescription>
               keywords, skills, technologies...etc
             </DrawerDescription>
+
             <Input
               className="my-4 w-full"
               type="text"
@@ -43,12 +71,11 @@ export default function SettingDrawer() {
         </DrawerHeader>
 
         <DrawerFooter>
-          <Button className="mx-auto max-w-fit px-12">Update</Button>
-
-          <DrawerClose>
-            <Button className="hover:border-indigo-400" variant="outline">
-              Cancel
-            </Button>
+          <DrawerClose
+            className="mx-auto max-w-fit rounded-md bg-indigo-400 px-4 py-2  text-foreground "
+            onClick={checkValidLocationAndUpdate}
+          >
+            Update
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

@@ -1,19 +1,11 @@
-"use client";
-import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import {
-  FilePlusIcon,
-  GearIcon,
-  MoonIcon,
-  PersonIcon,
-  SunIcon,
-} from "@radix-ui/react-icons";
-import { MapPinIcon } from "@heroicons/react/20/solid";
+import { FilePlusIcon } from "@radix-ui/react-icons";
 import { BackgroundGradientAnimation } from "~/components/animations/background-gradient-animation";
 import { SparklesCore } from "~/components/animations/sparkles";
 import { Meteors } from "~/components/animations/metors";
 import SettingDrawer from "./(components)/setting-drawer";
+import YourLocation from "./(components)/userLocation";
 
 export default function HomePage() {
   return (
@@ -45,6 +37,7 @@ export default function HomePage() {
               <FilePlusIcon className="h-5 w-5 text-foreground md:ml-2" />
             </Button>
           </div>
+
           <Input
             type="text"
             placeholder="E.g: Senior DevOps Engineer"
@@ -52,19 +45,7 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="flex w-2/3 items-center justify-center gap-2 py-4">
-          <MapPinIcon className="hidden size-4 text-indigo-400" />
-
-          <p className="text-center text-sm italic text-slate-600 dark:text-slate-400 md:w-[70ch]">
-            Location set to{" "}
-            <span className="text-indigo-400">Sfax, Tunisia</span>. To change,
-            use the{" "}
-            <span className="text-indigo-400 dark:text-indigo-600">
-              gear icon
-            </span>
-            .
-          </p>
-        </div>
+        <YourLocation />
       </section>
     </main>
   );
