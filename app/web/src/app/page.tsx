@@ -1,11 +1,11 @@
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { FilePlusIcon } from "@radix-ui/react-icons";
 import { BackgroundGradientAnimation } from "~/components/animations/background-gradient-animation";
 import { SparklesCore } from "~/components/animations/sparkles";
 import { Meteors } from "~/components/animations/metors";
 import SettingDrawer from "./(components)/setting-drawer";
 import YourLocation from "./(components)/userLocation";
+import UploadCV from "./(components)/uploadCV";
 
 export default function HomePage() {
   return (
@@ -26,16 +26,7 @@ export default function HomePage() {
             if authed set them to the user, store them to local storage and suggest logging in
             */}
             <SettingDrawer />
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full bg-transparent md:bg-indigo-400 md:dark:bg-indigo-600"
-            >
-              <p className="hidden text-foreground md:inline-block">
-                Upload CV
-              </p>
-              <FilePlusIcon className="h-5 w-5 text-foreground md:ml-2" />
-            </Button>
+            <UploadCV />
           </div>
 
           <Input
