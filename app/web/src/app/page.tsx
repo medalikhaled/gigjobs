@@ -6,6 +6,7 @@ import { Meteors } from "~/components/animations/metors";
 import SettingDrawer from "./(components)/setting-drawer";
 import YourLocation from "./(components)/userLocation";
 import UploadCV from "./(components)/uploadCV";
+import Footer from "./(components)/footer";
 
 export default function HomePage() {
   return (
@@ -36,7 +37,7 @@ export default function HomePage() {
           />
         </div>
 
-        <YourLocation />
+        <Footer />
       </section>
     </main>
   );

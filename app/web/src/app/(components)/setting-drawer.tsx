@@ -26,6 +26,8 @@ export default function SettingDrawer() {
       return;
     }
     changeLocation(newLocation);
+    //todo add it to local storage if it is a valid address
+    //todo use this data point to costruct a query for Jobs
   };
 
   return (

@@ -3,9 +3,12 @@
 import React, { useRef } from "react";
 import { Button } from "~/components/ui/button";
 import { FilePlusIcon } from "@radix-ui/react-icons";
+import { useResumeStore } from "~/stores/userData";
 
 export default function UploadCV() {
+  const { setUserResume } = useResumeStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   function handleUploadCV() {
     fileInputRef.current?.click();
   }
@@ -14,8 +17,11 @@ export default function UploadCV() {
     if (fileInputRef) {
       const file = fileInputRef.current?.files?.[0];
 
-      //reading the file and logging its content
       if (file) {
+        setUserResume(file);
+
+        // todo: upload it, parse it as an ATS
+        //reading the file and logging its content
         const reader = new FileReader();
         reader.onload = (event) => {
           const data = event.target?.result;

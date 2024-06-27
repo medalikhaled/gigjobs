@@ -10,3 +10,15 @@ export const useLocationStore = create<LocationState>((set) => ({
   changeLocation: (newLocation: string) =>
     set((_) => ({ location: newLocation })),
 }));
+
+//* ----
+
+interface ResumeState {
+  cv: File | null;
+  setUserResume: (cv: File | null) => void;
+}
+
+export const useResumeStore = create<ResumeState>((set) => ({
+  cv: null,
+  setUserResume: (cv: File | null) => set((_) => ({ cv: cv })),
+}));

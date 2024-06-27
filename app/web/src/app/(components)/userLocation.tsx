@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPinIcon } from "@heroicons/react/20/solid";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { env } from "~/env";
 import { useLocationStore } from "~/stores/userData";
 import { ORSResponse } from "~/types/ors";
