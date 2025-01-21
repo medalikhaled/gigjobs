@@ -7,11 +7,14 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { signIn, useSession } from "next-auth/react";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 
 export default function Login() {
   const { data: session } = useSession();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (session) {
@@ -37,6 +40,8 @@ export default function Login() {
                 placeholder="m@example.com"
                 className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600 focus:dark:border-indigo-400 focus:dark:ring-indigo-400"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
@@ -54,9 +59,33 @@ export default function Login() {
                 type="password"
                 className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600 focus:dark:border-indigo-400 focus:dark:ring-indigo-400"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button type="submit" className="w-full hover:bg-indigo-500">
+            {error && (
+              <p className="text-sm text-red-500">{error}</p>
+            )}
+            <Button 
+              onClick={async (e) => {
+                e.preventDefault();
+                try {
+                  const result = await signIn("credentials", {
+                    email,
+                    password,
+                    redirect: false,
+                  });
+                  if (result?.error) {
+                    setError("Invalid email or password");
+                  } else {
+                    window.location.href = "/";
+                  }
+                } catch (error) {
+                  setError("Something went wrong. Please try again.");
+                }
+              }}
+              className="w-full hover:bg-indigo-500"
+            >
               Login
             </Button>
             <Button

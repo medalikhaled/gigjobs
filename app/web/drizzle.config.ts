@@ -12,4 +12,6 @@ export default {
   },
   tablesFilter: ["web_*"],
   out: "./drizzle",
+  strict: false,
+  verbose: true,
 } satisfies Config;

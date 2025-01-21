@@ -18,6 +18,7 @@ export const client =
     url: env.DATABASE_URL,
     authToken: env.DATABASE_TOKEN,
   });
+  
 if (env.NODE_ENV !== "production") globalForDb.client = client;
 
 export const db = drizzle(client, { schema });

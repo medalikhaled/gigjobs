@@ -30,8 +30,8 @@ export const posts = createTable(
     updatedAt: int("updatedAt", { mode: "timestamp" }),
   },
   (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
+    createdByIdIdx: index("post_createdById_idx").on(example.createdById),
+    nameIndex: index("post_name_idx").on(example.name),
   })
 );
 
@@ -73,7 +73,7 @@ export const accounts = createTable(
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-    userIdIdx: index("account_userId_idx").on(account.userId),
+    userIdIdx: index("account_user_idx").on(account.userId),
   })
 );
 
@@ -91,7 +91,7 @@ export const sessions = createTable(
     expires: int("expires", { mode: "timestamp" }).notNull(),
   },
   (session) => ({
-    userIdIdx: index("session_userId_idx").on(session.userId),
+    userIdIdx: index("session_user_idx").on(session.userId),
   })
 );
 
