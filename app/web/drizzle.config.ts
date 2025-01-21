@@ -5,10 +5,11 @@ import { env } from "~/env";
 export default {
   schema: "./src/server/db/schema.ts",
   dialect: "sqlite",
-  driver:"turso",
+  driver: "turso",
   dbCredentials: {
     url: env.DATABASE_URL,
     authToken: env.DATABASE_TOKEN
   },
   tablesFilter: ["web_*"],
+  out: "./drizzle",
 } satisfies Config;

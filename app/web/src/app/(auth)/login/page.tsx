@@ -60,14 +60,24 @@ export default function Login() {
               Login
             </Button>
             <Button
-              onClick={() => signIn("google")}
+              onClick={() => signIn("google", {
+                callbackUrl: "/",
+                redirect: true,
+              }).catch((error) => {
+                console.error("Google sign-in error:", error);
+              })}
               variant="outline"
               className="w-full hover:bg-indigo-200 dark:hover:bg-opacity-60 dark:hover:bg-gradient-to-r dark:hover:from-[#34A853] dark:hover:via-[#FBBC05] dark:hover:to-[#EA4335]"
             >
               Login with Google
             </Button>
             <Button
-              onClick={() => signIn("github")}
+              onClick={() => signIn("discord", {
+                callbackUrl: "/",
+                redirect: true,
+              }).catch((error) => {
+                console.error("Discord sign-in error:", error);
+              })}
               variant="outline"
               className="w-full hover:bg-indigo-200 dark:hover:bg-violet-700 dark:hover:bg-opacity-60"
             >
