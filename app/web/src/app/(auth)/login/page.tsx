@@ -1,14 +1,25 @@
 "use client";
+
 import Link from "next/link";
 import { Meteors } from "~/components/animations/metors";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { signIn, useSession } from "next-auth/react";
+import { useContext, useEffect } from "react";
+import { redirect } from "next/navigation";
 
 export default function Login() {
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      redirect("/");
+    }
+  }, []);
   return (
-    <main className="w-full overflow-hidden lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-screen">
+    <main className="mt-24 w-full overflow-hidden lg:mt-0 lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-screen">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
@@ -49,12 +60,14 @@ export default function Login() {
               Login
             </Button>
             <Button
+              onClick={() => signIn("google")}
               variant="outline"
               className="w-full hover:bg-indigo-200 dark:hover:bg-opacity-60 dark:hover:bg-gradient-to-r dark:hover:from-[#34A853] dark:hover:via-[#FBBC05] dark:hover:to-[#EA4335]"
             >
               Login with Google
             </Button>
             <Button
+              onClick={() => signIn("github")}
               variant="outline"
               className="w-full hover:bg-indigo-200 dark:hover:bg-violet-700 dark:hover:bg-opacity-60"
             >
