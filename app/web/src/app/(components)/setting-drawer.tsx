@@ -3,6 +3,8 @@
 import { GearIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Input } from "~/components/ui/input";
+import { useLocationStore } from "~/stores/userData";
 import {
   Drawer,
   DrawerClose,
@@ -13,63 +15,64 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
-import { Input } from "~/components/ui/input";
-import { useLocationStore } from "~/stores/userData";
 
 export default function SettingDrawer() {
-  const { location, changeLocation } = useLocationStore();
-  const [newLocation, setNewLocation] = useState<string>("");
-
-  const checkValidLocationAndUpdate = () => {
-    if (!newLocation || newLocation.split(",").length !== 2) {
-      alert("Please enter a valid location");
-      return;
-    }
-    changeLocation(newLocation);
-    //todo add it to local storage if it is a valid address
-    //todo use this data point to costruct a query for Jobs
-  };
+  const {
+    keywords: storedKeywords,
+    location: storedLocation,
+    changeLocation,
+    changeKeywords,
+  } = useLocationStore();
+  const [location, setLocation] = useState(storedLocation || "");
+  const [keywords, setKeywords] = useState(storedKeywords || "");
 
   return (
     <Drawer>
-      <DrawerTrigger>
-        <GearIcon className="mx-2 h-5 w-5 text-indigo-600 dark:text-indigo-300" />
+      <DrawerTrigger asChild>
+        <button className="mx-2 text-indigo-600 dark:text-indigo-300">
+          <GearIcon className="h-5 w-5" />
+        </button>
       </DrawerTrigger>
 
       <DrawerContent>
-        <DrawerHeader className="flex items-center justify-center gap-4 py-8 md:gap-12">
-          <div>
-            <DrawerTitle>Change your location</DrawerTitle>
-            <DrawerDescription>
-              current location set to{" "}
-              <span className="italic text-indigo-400">{location}</span>
-            </DrawerDescription>
+        <DrawerHeader className="flex flex-col items-center justify-center gap-8 py-8">
+          <div className="w-full max-w-xl space-y-4">
+            <DrawerTitle>Your Location</DrawerTitle>
+            <DrawerDescription>Enter your city or region</DrawerDescription>
             <Input
-              className="my-4 w-full"
               type="text"
-              onChange={(e) => setNewLocation(e.target.value)}
+              placeholder="e.g. London, UK"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
-          <div>
-            <DrawerTitle>Add some context</DrawerTitle>
-            <DrawerDescription>
-              keywords, skills, technologies...etc
-            </DrawerDescription>
 
+          <div className="w-full max-w-xl space-y-4">
+            <DrawerTitle>Skills & Technologies</DrawerTitle>
+            <DrawerDescription>
+              Enter keywords related to your interests
+            </DrawerDescription>
             <Input
-              className="my-4 w-full"
               type="text"
-              placeholder="docker, git, react..etc"
+              placeholder="e.g. react, typescript, docker"
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
             />
           </div>
         </DrawerHeader>
 
         <DrawerFooter>
-          <DrawerClose
-            className="mx-auto max-w-fit rounded-md bg-indigo-400 px-4 py-2  text-foreground "
-            onClick={checkValidLocationAndUpdate}
-          >
-            Update
+          <DrawerClose asChild>
+            <button
+              className="mx-auto rounded-md bg-indigo-500 px-6 py-2 text-white transition-colors hover:bg-indigo-600"
+              onClick={() => {
+                changeLocation(location);
+                changeKeywords(keywords);
+                toast.success("Settings updated successfully");
+              }}
+            >
+              Save Changes
+            </button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

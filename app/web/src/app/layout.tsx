@@ -1,13 +1,12 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { ThemeProvider } from "~/components/theme-provider";
 import Navigation from "./(components)/navigation";
-import { Toaster } from "~/components/ui/sonner";
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Gig Jobs",
-  description: "where you go to find where your careers belongs",
+  description: "Find your next career opportunity in the gig economy",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
@@ -23,17 +22,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <Providers>
           <Navigation />
-        </ThemeProvider>
-        {children}
-
-        <Toaster />
+          {children}
+        </Providers>
       </body>
     </html>
   );
