@@ -82,10 +82,11 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
-                className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600 focus:dark:border-indigo-400 focus:dark:ring-indigo-400"
+                className="focus-visible:border-primary focus-visible:ring-primary"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
               />
             </div>
             <div className="grid gap-2">
@@ -93,10 +94,11 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600 focus:dark:border-indigo-400 focus:dark:ring-indigo-400"
+                className="focus-visible:border-primary focus-visible:ring-primary"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
               />
             </div>
             {error && (
@@ -104,7 +106,7 @@ export default function LoginPage() {
             )}
             <Button 
               type="submit" 
-              className="w-full hover:bg-indigo-500"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={isLoading}
             >
               {isLoading ? "Signing in..." : "Sign in"}
@@ -125,7 +127,7 @@ export default function LoginPage() {
               type="button"
               variant="outline"
               onClick={() => signIn("google", { callbackUrl: "/" })}
-              className="w-full"
+              className="w-full hover:bg-accent hover:text-accent-foreground"
             >
               Continue with Google
             </Button>

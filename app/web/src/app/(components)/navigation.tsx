@@ -16,14 +16,14 @@ export default function Navigation() {
   };
 
   return (
-    <>  
+    <>
       <Sidebar open={sidebarOpen} onOpenChange={handleSidebarToggle} />
-      <nav className="sticky left-0 top-0 z-50 flex w-full items-center justify-between bg-background/80 px-8 py-4 backdrop-blur-sm md:px-20">
+      <nav className="sticky left-0 top-0 z-50 flex w-full items-center justify-between bg-background/80 px-8 py-2 backdrop-blur-md md:px-20">
         <div className="flex items-center justify-center gap-2">
-          <Button variant="ghost" onClick={() => handleSidebarToggle(true)}>
+          {/* <Button variant="ghost" onClick={() => handleSidebarToggle(true)}>
             <ListBulletIcon className="h-6 w-6 transition-colors hover:text-indigo-400" />
             <span className="sr-only">Open Sidebar</span>
-          </Button>
+          </Button> */}
 
           <Link href="/" className="h-6 w-6">
             <HomeIcon className="h-6 w-6 transition-colors hover:text-indigo-400" />
@@ -36,7 +36,7 @@ export default function Navigation() {
             <Button
               variant="ghost"
               onClick={() => signOut()}
-              className="rounded-md py-1 text-foreground transition-colors hover:text-red-500 md:px-4"
+              className="rounded-md py-1 text-foreground transition-colors hover:bg-red-200 dark:text-red-400 md:px-4"
             >
               Sign Out
             </Button>
