@@ -9,7 +9,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Card } from "~/components/ui/card";
-import { getJob, applyToJob, listApplications } from "~/server/actions/jobs";
+import { getJob, applyToJob, listApplications, hasApplied } from "~/server/actions/jobs";
 import {
   MapIcon,
   ClockIcon,
@@ -58,6 +58,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [hasUserApplied, setHasUserApplied] = useState(false);
   const [applicationData, setApplicationData] = useState({
     cvLink: "",
     motivationLetter: "",
@@ -76,8 +77,13 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
       if (!user) return;
 
       try {
-        const jobData = await getJob(params.id);
+        const [jobData, userHasApplied] = await Promise.all([
+          getJob(params.id),
+          hasApplied(params.id, user.id)
+        ]);
+        
         setJob(jobData);
+        setHasUserApplied(userHasApplied);
 
         if (user.role === "employer" && user.id === jobData.createdById) {
           const applicationsData = await listApplications(params.id, user.id);
@@ -195,8 +201,9 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
           <Button
             className="w-full"
             onClick={() => setShowApplicationForm(true)}
+            disabled={hasUserApplied}
           >
-            Apply Now
+            {hasUserApplied ? "Applied" : "Apply Now"}
           </Button>
         )}
 
@@ -209,7 +216,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
                   id="cvLink"
                   type="url"
                   placeholder="Link to your CV/Resume"
-                  value={applicationData.cvLink}
+                  value={applicationData.cvLink ?? ""}
                   onChange={(e) =>
                     setApplicationData((prev) => ({
                       ...prev,

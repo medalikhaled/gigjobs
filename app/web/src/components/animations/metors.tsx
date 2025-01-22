@@ -1,15 +1,14 @@
 import { cn } from "~/lib/utils";
-import clsx from "clsx";
-import React from "react";
+import React, { useMemo } from "react";
 
-export const Meteors = ({
+export const Meteors = React.memo(({
   number,
   className,
 }: {
   number?: number;
   className?: string;
 }) => {
-  const meteors = new Array(number || 20).fill(true);
+  const meteors = useMemo(() => new Array(number || 20).fill(true), [number]);
   return (
     <>
       {meteors.map((el, idx) => (
@@ -30,4 +29,6 @@ export const Meteors = ({
       ))}
     </>
   );
-};
+});
+
+Meteors.displayName = "Meteors";

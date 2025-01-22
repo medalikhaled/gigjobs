@@ -40,8 +40,8 @@ export default function Signup() {
   };
 
   return (
-    <main className="mt-24 w-full overflow-hidden lg:mt-0 lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-screen">
-      <div className="flex items-center justify-center py-12">
+    <main className="grid h-screen w-full overflow-hidden lg:grid-cols-2">
+      <div className="flex items-center justify-center">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Create an Account</h1>
@@ -89,9 +89,11 @@ export default function Signup() {
             </div>
             <div className="grid gap-2">
               <Label>I am a...</Label>
-              <RadioGroup 
-                value={role} 
-                onValueChange={(value) => setRole(value as "employee" | "employer")}
+              <RadioGroup
+                value={role}
+                onValueChange={(value) =>
+                  setRole(value as "employee" | "employer")
+                }
                 className="grid grid-cols-2 gap-4"
               >
                 <div className="flex items-center space-x-2">
@@ -104,11 +106,9 @@ export default function Signup() {
                 </div>
               </RadioGroup>
             </div>
-            {error && (
-              <p className="text-sm text-red-500">{error}</p>
-            )}
-            <Button 
-              type="submit" 
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <Button
+              type="submit"
               className="w-full hover:bg-indigo-500"
               disabled={isLoading}
             >

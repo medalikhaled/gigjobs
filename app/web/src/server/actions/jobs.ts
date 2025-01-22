@@ -43,10 +43,13 @@ export async function createJob(data: z.infer<typeof jobSchema>, userId: string)
   }
 }
 
-export async function listJobs(page = 1, limit = 10) {
+export async function listJobs(page = 1, limit = 10, search?: string) {
   try {
     const offset = (page - 1) * limit;
     const jobsList = await db.query.jobs.findMany({
+      where: search 
+        ? sql`title LIKE ${`%${search}%`} OR company LIKE ${`%${search}%`} OR description LIKE ${`%${search}%`}`
+        : undefined,
       orderBy: [desc(jobs.createdAt)],
       limit,
       offset,
@@ -63,6 +66,9 @@ export async function listJobs(page = 1, limit = 10) {
     const result = await db
       .select({ count: sql<number>`count(*)` })
       .from(jobs)
+      .where(search 
+        ? sql`title LIKE ${`%${search}%`} OR company LIKE ${`%${search}%`} OR description LIKE ${`%${search}%`}`
+        : undefined)
       .then((res) => res[0]);
 
     if (!result) {
@@ -77,6 +83,19 @@ export async function listJobs(page = 1, limit = 10) {
     };
   } catch (error) {
     console.error("List jobs error:", error);
+    throw error;
+  }
+}
+
+export async function hasApplied(jobId: string, userId: string) {
+  try {
+    const application = await db.query.jobApplications.findFirst({
+      where: (apps) =>
+        eq(apps.jobId, jobId) && eq(apps.applicantId, userId),
+    });
+    return !!application;
+  } catch (error) {
+    console.error("Check application error:", error);
     throw error;
   }
 }

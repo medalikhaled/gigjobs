@@ -66,8 +66,8 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="mt-24 w-full overflow-hidden lg:mt-0 lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-screen">
-      <div className="flex items-center justify-center py-12">
+    <main className="grid h-screen w-full overflow-hidden lg:grid-cols-2">
+      <div className="flex items-center justify-center">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Welcome back</h1>
@@ -101,11 +101,9 @@ export default function LoginPage() {
                 autoComplete="current-password"
               />
             </div>
-            {error && (
-              <p className="text-sm text-red-500">{error}</p>
-            )}
-            <Button 
-              type="submit" 
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <Button
+              type="submit"
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={isLoading}
             >

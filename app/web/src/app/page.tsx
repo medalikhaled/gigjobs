@@ -69,12 +69,12 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex flex-col items-center bg-background text-foreground">
+    <main className="flex min-h-[calc(100vh-4rem)] flex-col items-center bg-background text-foreground">
       <HeaderSparkles />
       {/* <h2 className="mt-4 text-center text-xl font-semibold">
         {user.role === "employer" ? "Find the Best Talent" : "Find Your Dream Job"}
       </h2> */}
-      <section className="flex w-full flex-1 flex-col items-center justify-center px-4 py-8">
+      <section className="flex w-full flex-col items-center justify-center px-4 py-8">
         <Meteors
           number={50}
           className="dark:bg-indigo-800-700 before:from-teal-400 dark:before:from-red-400"
@@ -133,11 +133,11 @@ export default function HomePage() {
 
 export function HeaderSparkles() {
   return (
-    <div className="relative w-full flex-col items-center justify-center overflow-hidden rounded-md bg-transparent py-12 md:flex">
+    <div className="relative w-full flex-col items-center justify-center overflow-hidden rounded-md bg-transparent py-8 md:flex">
       <h1 className="relative z-20 text-center text-3xl font-bold md:text-7xl lg:text-9xl">
         GiG Jobs
       </h1>
-      <div className="relative h-40 w-[40rem]">
+      <div className="relative h-32 w-[40rem]">
         {/* Gradients */}
         <div className="absolute inset-x-20 top-0 h-[2px] w-3/4 bg-gradient-to-r from-transparent via-indigo-500 to-transparent blur-sm" />
         <div className="absolute inset-x-20 top-0 h-px w-3/4 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />

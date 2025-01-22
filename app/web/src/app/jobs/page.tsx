@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useAuthStore } from "~/stores/authStore";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
 import { listJobs } from "~/server/actions/jobs";
 import Link from "next/link";
 import { MapIcon, ClockIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
@@ -36,6 +37,8 @@ export default function JobsPage() {
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -44,9 +47,17 @@ export default function JobsPage() {
   }, [status, router]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const result = await listJobs(page);
+        const result = await listJobs(page, 10, debouncedSearch);
         setJobs(result.jobs);
         setTotalPages(result.totalPages);
       } catch (error) {
@@ -58,7 +69,7 @@ export default function JobsPage() {
     };
 
     fetchJobs();
-  }, [page]);
+  }, [page, debouncedSearch]);
 
   if (status === "loading" || !user) {
     return (
@@ -70,13 +81,22 @@ export default function JobsPage() {
 
   return (
     <main className="container mx-auto py-10">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Available Jobs</h1>
-        {user.role === "employer" && (
-          <Button asChild>
-            <Link href="/jobs/post">Post a Job</Link>
-          </Button>
-        )}
+      <div className="mb-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Available Jobs</h1>
+          {user.role === "employer" && (
+            <Button asChild>
+              <Link href="/jobs/post">Post a Job</Link>
+            </Button>
+          )}
+        </div>
+        <Input
+          type="search"
+          placeholder="Search jobs by title, company, or description..."
+          value={searchQuery}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+          className="max-w-xl"
+        />
       </div>
 
       {error ? (
