@@ -43,7 +43,7 @@ export async function createJob(data: z.infer<typeof jobSchema>, userId: string)
   }
 }
 
-export async function listJobs(page = 1, limit = 10, search?: string) {
+export async function listJobs(page = 1, limit = 10, search?: string, userId?: string) {
   try {
     const offset = (page - 1) * limit;
     const jobsList = await db.query.jobs.findMany({
@@ -75,8 +75,25 @@ export async function listJobs(page = 1, limit = 10, search?: string) {
       throw new Error("Failed to get job count");
     }
 
+    // If userId is provided, check application status for each job
+    let jobsWithApplicationStatus = jobsList;
+    if (userId) {
+      const applications = await db.query.jobApplications.findMany({
+        where: (apps) => eq(apps.applicantId, userId),
+        columns: {
+          jobId: true,
+        },
+      });
+
+      const appliedJobIds = new Set(applications.map(app => app.jobId));
+      jobsWithApplicationStatus = jobsList.map(job => ({
+        ...job,
+        hasApplied: appliedJobIds.has(job.id),
+      }));
+    }
+
     return {
-      jobs: jobsList,
+      jobs: jobsWithApplicationStatus,
       total: result.count,
       page,
       totalPages: Math.ceil(result.count / limit),

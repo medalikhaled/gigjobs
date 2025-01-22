@@ -26,6 +26,7 @@ interface Job {
     name: string | null;
     email: string;
   };
+  hasApplied?: boolean;
 }
 
 export default function JobsPage() {
@@ -62,7 +63,7 @@ export default function JobsPage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const result = await listJobs(page, 10, debouncedSearch);
+        const result = await listJobs(page, 10, debouncedSearch, user?.id);
         setJobs(result.jobs);
         setTotalPages(result.totalPages);
       } catch (error) {
@@ -125,9 +126,9 @@ export default function JobsPage() {
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {jobs.map((job) => (
-              <Link key={job.id} href={`/jobs/${job.id}`}>
-                <Card className="h-full cursor-pointer p-6 transition-shadow hover:shadow-lg">
-                  <div className="space-y-4">
+              <Card key={job.id} className="h-full p-6 transition-shadow hover:shadow-lg">
+                <Link href={`/jobs/${job.id}`} className="block">
+                  <div className="space-y-4 cursor-pointer">
                     <div>
                       <h2 className="text-xl font-semibold">{job.title}</h2>
                       <p className="text-muted-foreground">{job.company}</p>
@@ -165,8 +166,19 @@ export default function JobsPage() {
                       </span>
                     </div>
                   </div>
-                </Card>
-              </Link>
+                </Link>
+                {user.role === "employee" && (
+                  <div className="mt-4 flex justify-end">
+                    {job.hasApplied ? (
+                      <span className="text-sm text-green-600 font-medium">Applied</span>
+                    ) : (
+                      <Button asChild size="sm">
+                        <Link href={`/jobs/${job.id}`}>Apply Now</Link>
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </Card>
             ))}
           </div>
 
