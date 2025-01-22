@@ -13,7 +13,8 @@ import UploadCV from "./(components)/uploadCV";
 import Footer from "./(components)/footer";
 import { useLocationStore } from "~/stores/userData";
 import { useState } from "react";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon, RocketIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 
 export default function HomePage() {
@@ -68,16 +69,25 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-background text-foreground">
+    <main className="flex flex-col items-center bg-background text-foreground">
       <HeaderSparkles />
-      <h2 className="mt-4 text-center text-xl font-semibold">
+      {/* <h2 className="mt-4 text-center text-xl font-semibold">
         {user.role === "employer" ? "Find the Best Talent" : "Find Your Dream Job"}
-      </h2>
+      </h2> */}
       <section className="flex w-full flex-1 flex-col items-center justify-center px-4 py-8">
         <Meteors
           number={50}
           className="dark:bg-indigo-800-700 before:from-teal-400 dark:before:from-red-400"
         />
+
+        <div className="mb-4 flex justify-center">
+          <Button asChild className="gap-2">
+            <Link href="/jobs">
+              <RocketIcon className="h-5 w-5" />
+              {user.role === "employer" ? "Post a Job" : "Browse Jobs"}
+            </Link>
+          </Button>
+        </div>
 
         <div className="container flex flex-col items-center justify-center gap-2 rounded-2xl md:w-2/3 md:flex-row md:gap-1">
           <div className="flex h-12 items-center justify-center gap-1 rounded-md border-0 border-foreground bg-transparent p-2 shadow-sm transition-colors md:w-1/3 md:rounded-l-3xl md:rounded-r-none md:border">

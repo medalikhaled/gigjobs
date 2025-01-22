@@ -1,1 +1,0 @@
-ALTER TABLE `web_user` ADD `role` text(255) DEFAULT 'employee' NOT NULL;

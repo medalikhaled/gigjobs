@@ -17,12 +17,19 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
+const initialState: AuthState = {
+  user: null,
+  isAuthenticated: false,
+  setUser: () => {},
+};
+
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
       isAuthenticated: false,
-      setUser: (user) => set({ user, isAuthenticated: !!user }),
+      setUser: (user: User | null) => set({ user, isAuthenticated: !!user }),
     }),
     {
       name: "auth-storage",

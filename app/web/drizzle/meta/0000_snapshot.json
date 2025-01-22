@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "3d84c04a-d40b-4493-ab6c-c3e408cf59ec",
+  "id": "3c216f0d-935e-4b6d-8c96-f0e32f92c6d7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "web_account": {
@@ -86,8 +86,8 @@
         }
       },
       "indexes": {
-        "account_userId_idx": {
-          "name": "account_userId_idx",
+        "account_user_idx": {
+          "name": "account_user_idx",
           "columns": [
             "userId"
           ],
@@ -120,32 +120,61 @@
       },
       "uniqueConstraints": {}
     },
-    "web_post": {
-      "name": "web_post",
+    "web_jobApplication": {
+      "name": "web_jobApplication",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text(255)",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text(256)",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         },
-        "createdById": {
-          "name": "createdById",
+        "jobId": {
+          "name": "jobId",
           "type": "text(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "applicantId": {
+          "name": "applicantId",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cvLink": {
+          "name": "cvLink",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "motivationLetter": {
+          "name": "motivationLetter",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "socialLinks": {
+          "name": "socialLinks",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text(50)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'pending'"
+        },
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -161,25 +190,162 @@
         }
       },
       "indexes": {
-        "createdById_idx": {
-          "name": "createdById_idx",
+        "application_jobId_idx": {
+          "name": "application_jobId_idx",
           "columns": [
-            "createdById"
+            "jobId"
           ],
           "isUnique": false
         },
-        "name_idx": {
-          "name": "name_idx",
+        "application_applicantId_idx": {
+          "name": "application_applicantId_idx",
           "columns": [
-            "name"
+            "applicantId"
           ],
           "isUnique": false
         }
       },
       "foreignKeys": {
-        "web_post_createdById_web_user_id_fk": {
-          "name": "web_post_createdById_web_user_id_fk",
-          "tableFrom": "web_post",
+        "web_jobApplication_jobId_web_job_id_fk": {
+          "name": "web_jobApplication_jobId_web_job_id_fk",
+          "tableFrom": "web_jobApplication",
+          "tableTo": "web_job",
+          "columnsFrom": [
+            "jobId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "web_jobApplication_applicantId_web_user_id_fk": {
+          "name": "web_jobApplication_applicantId_web_user_id_fk",
+          "tableFrom": "web_jobApplication",
+          "tableTo": "web_user",
+          "columnsFrom": [
+            "applicantId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "web_job": {
+      "name": "web_job",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text(255)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "company": {
+          "name": "company",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deliveryTime": {
+          "name": "deliveryTime",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "requirements": {
+          "name": "requirements",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "salary": {
+          "name": "salary",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "location": {
+          "name": "location",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "applicantsCount": {
+          "name": "applicantsCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "createdById": {
+          "name": "createdById",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "job_createdById_idx": {
+          "name": "job_createdById_idx",
+          "columns": [
+            "createdById"
+          ],
+          "isUnique": false
+        },
+        "job_title_idx": {
+          "name": "job_title_idx",
+          "columns": [
+            "title"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "web_job_createdById_web_user_id_fk": {
+          "name": "web_job_createdById_web_user_id_fk",
+          "tableFrom": "web_job",
           "tableTo": "web_user",
           "columnsFrom": [
             "createdById"
@@ -220,8 +386,8 @@
         }
       },
       "indexes": {
-        "session_userId_idx": {
-          "name": "session_userId_idx",
+        "session_user_idx": {
+          "name": "session_user_idx",
           "columns": [
             "userId"
           ],
@@ -291,6 +457,14 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "role": {
+          "name": "role",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'employee'"
         }
       },
       "indexes": {},
