@@ -37,7 +37,12 @@ export default function JobsPage() {
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return new URLSearchParams(window.location.search).get('q') || "";
+    }
+    return "";
+  });
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   useEffect(() => {

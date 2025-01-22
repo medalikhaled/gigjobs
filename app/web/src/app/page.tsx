@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useAuthStore } from "~/stores/authStore";
@@ -22,6 +22,7 @@ export default function HomePage() {
   const router = useRouter();
   const { coordinates, keywords: storedKeywords } = useLocationStore();
   const [jobSearch, setJobSearch] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [isSearching, setIsSearching] = useState(false);
   const { user, setUser } = useAuthStore();
 
@@ -40,6 +41,18 @@ export default function HomePage() {
     }
   }, [status, sessionData, router, setUser]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "/" && !e.ctrlKey && !e.metaKey && !e.target?.hasOwnProperty("value")) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   if (status === "loading" || !user) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -48,24 +61,14 @@ export default function HomePage() {
     );
   }
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     if (!jobSearch) {
       return;
     }
-
-    setIsSearching(true);
-    try {
-      // TODO: Implement job search API call
-      console.log("Searching for jobs:", {
-        position: jobSearch,
-        location: coordinates?.displayName,
-        keywords: storedKeywords,
-      });
-    } catch (error) {
-      console.error("Search failed:", error);
-    } finally {
-      setIsSearching(false);
-    }
+    
+    const searchParams = new URLSearchParams();
+    searchParams.set('q', jobSearch);
+    router.push(`/jobs?${searchParams.toString()}`);
   };
 
   return (
@@ -104,6 +107,7 @@ export default function HomePage() {
           <div className="relative w-full md:w-2/3">
             <div className="relative">
               <Input
+                ref={searchInputRef}
                 type="text"
                 value={jobSearch}
                 onChange={(e) => setJobSearch(e.target.value)}
