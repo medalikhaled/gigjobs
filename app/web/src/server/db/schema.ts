@@ -16,33 +16,77 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = sqliteTableCreator((name) => `web_${name}`);
 
-export const posts = createTable(
-  "post",
+export const jobs = createTable(
+  "job",
   {
-    id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-    name: text("name", { length: 256 }),
+    id: text("id", { length: 255 }).notNull().primaryKey(),
+    title: text("title", { length: 255 }).notNull(),
+    company: text("company", { length: 255 }).notNull(),
+    description: text("description").notNull(),
+    deliveryTime: text("deliveryTime", { length: 255 }).notNull(),
+    requirements: text("requirements"),
+    salary: text("salary", { length: 255 }),
+    location: text("location", { length: 255 }),
+    applicantsCount: int("applicantsCount").default(0).notNull(),
     createdById: text("createdById", { length: 255 })
       .notNull()
       .references(() => users.id),
-    createdAt: int("created_at", { mode: "timestamp" })
+    createdAt: int("createdAt", { mode: "timestamp" })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: int("updatedAt", { mode: "timestamp" }),
   },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
+  (job) => ({
+    createdByIdIdx: index("job_createdById_idx").on(job.createdById),
+    titleIdx: index("job_title_idx").on(job.title),
   })
 );
+
+export const jobApplications = createTable(
+  "jobApplication",
+  {
+    id: text("id", { length: 255 }).notNull().primaryKey(),
+    jobId: text("jobId", { length: 255 })
+      .notNull()
+      .references(() => jobs.id),
+    applicantId: text("applicantId", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    cvLink: text("cvLink"),
+    motivationLetter: text("motivationLetter").notNull(),
+    socialLinks: text("socialLinks"), // JSON string of social media links
+    status: text("status", { length: 50 }).default("pending").notNull(),
+    createdAt: int("createdAt", { mode: "timestamp" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: int("updatedAt", { mode: "timestamp" }),
+  },
+  (application) => ({
+    jobIdIdx: index("application_jobId_idx").on(application.jobId),
+    applicantIdIdx: index("application_applicantId_idx").on(application.applicantId),
+  })
+);
+
+export const jobsRelations = relations(jobs, ({ one, many }) => ({
+  creator: one(users, { fields: [jobs.createdById], references: [users.id] }),
+  applications: many(jobApplications),
+}));
+
+export const jobApplicationsRelations = relations(jobApplications, ({ one }) => ({
+  job: one(jobs, { fields: [jobApplications.jobId], references: [jobs.id] }),
+  applicant: one(users, { fields: [jobApplications.applicantId], references: [users.id] }),
+}));
 
 export const users = createTable("user", {
   id: text("id", { length: 255 }).notNull().primaryKey(),
   name: text("name", { length: 255 }),
   email: text("email", { length: 255 }).notNull(),
+  password: text("password", { length: 255 }),
   emailVerified: int("emailVerified", {
     mode: "timestamp",
   }).default(sql`CURRENT_TIMESTAMP`),
   image: text("image", { length: 255 }),
+  role: text("role", { length: 255 }).default("employee").notNull(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -72,7 +116,7 @@ export const accounts = createTable(
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-    userIdIdx: index("account_userId_idx").on(account.userId),
+    userIdIdx: index("account_user_idx").on(account.userId),
   })
 );
 
@@ -90,7 +134,7 @@ export const sessions = createTable(
     expires: int("expires", { mode: "timestamp" }).notNull(),
   },
   (session) => ({
-    userIdIdx: index("session_userId_idx").on(session.userId),
+    userIdIdx: index("session_user_idx").on(session.userId),
   })
 );
 
