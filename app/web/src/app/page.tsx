@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { SparklesCore } from "~/components/animations/sparkles";
@@ -13,9 +16,25 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 
 export default function HomePage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const { coordinates, keywords: storedKeywords } = useLocationStore();
   const [jobSearch, setJobSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-background">
+        <div className="animate-pulse">Loading...</div>
+      </main>
+    );
+  }
 
   const handleSearch = async () => {
     if (!jobSearch) {
@@ -38,9 +57,9 @@ export default function HomePage() {
   };
 
   return (
-    <main className="z-0 flex min-h-screen flex-col items-center bg-background pt-20 text-foreground">
+    <main className="flex min-h-screen flex-col items-center bg-background text-foreground">
       <HeaderSparkles />
-      <section className="flex w-full flex-1 flex-col items-center justify-center">
+      <section className="flex w-full flex-1 flex-col items-center justify-center px-4 py-8">
         <Meteors
           number={50}
           className="dark:bg-indigo-800-700 before:from-teal-400 dark:before:from-red-400"
@@ -95,7 +114,7 @@ export default function HomePage() {
 
 export function HeaderSparkles() {
   return (
-    <div className="relative hidden h-[16rem] w-full flex-col items-center justify-center overflow-hidden rounded-md bg-transparent md:flex">
+    <div className="relative w-full flex-col items-center justify-center overflow-hidden rounded-md bg-transparent py-12 md:flex">
       <h1 className="relative z-20 text-center text-3xl font-bold md:text-7xl lg:text-9xl">
         GiG Jobs
       </h1>

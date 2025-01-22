@@ -2,36 +2,64 @@
 
 import Link from "next/link";
 import { Meteors } from "~/components/animations/metors";
-
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { signIn, useSession } from "next-auth/react";
-import { useContext, useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { useState } from "react";
+import { redirect, useRouter } from "next/navigation";
 
-export default function Login() {
+export default function LoginPage() {
   const { data: session } = useSession();
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (session) {
-      redirect("/");
+  if (session) {
+    redirect("/");
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password");
+        return;
+      }
+
+      if (result?.ok) {
+        router.push("/");
+        router.refresh();
+      }
+    } catch (error) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  };
+
   return (
     <main className="mt-24 w-full overflow-hidden lg:mt-0 lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-screen">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Login</h1>
+            <h1 className="text-3xl font-bold">Welcome back</h1>
             <p className="text-balance text-muted-foreground">
-              Enter your email below to login to your account
+              Enter your details below to sign in to your account
             </p>
           </div>
-          <div className="grid gap-4">
+          <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -45,15 +73,7 @@ export default function Login() {
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -67,60 +87,40 @@ export default function Login() {
               <p className="text-sm text-red-500">{error}</p>
             )}
             <Button 
-              onClick={async (e) => {
-                e.preventDefault();
-                try {
-                  const result = await signIn("credentials", {
-                    email,
-                    password,
-                    redirect: false,
-                  });
-                  if (result?.error) {
-                    setError("Invalid email or password");
-                  } else {
-                    window.location.href = "/";
-                  }
-                } catch (error) {
-                  setError("Something went wrong. Please try again.");
-                }
-              }}
+              type="submit" 
               className="w-full hover:bg-indigo-500"
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
             <Button
-              onClick={() => signIn("google", {
-                callbackUrl: "/",
-                redirect: true,
-              }).catch((error) => {
-                console.error("Google sign-in error:", error);
-              })}
+              type="button"
               variant="outline"
-              className="w-full hover:bg-indigo-200 dark:hover:bg-opacity-60 dark:hover:bg-gradient-to-r dark:hover:from-[#34A853] dark:hover:via-[#FBBC05] dark:hover:to-[#EA4335]"
+              onClick={() => signIn("google", { callbackUrl: "/" })}
+              className="w-full"
             >
-              Login with Google
+              Continue with Google
             </Button>
-            <Button
-              onClick={() => signIn("discord", {
-                callbackUrl: "/",
-                redirect: true,
-              }).catch((error) => {
-                console.error("Discord sign-in error:", error);
-              })}
-              variant="outline"
-              className="w-full hover:bg-indigo-200 dark:hover:bg-violet-700 dark:hover:bg-opacity-60"
-            >
-              Login with Discord
-            </Button>
-          </div>
+          </form>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
+            Don't have an account?{" "}
             <Link href="/signup" className="underline">
               Sign up
             </Link>
           </div>
         </div>
-
         <Meteors number={20} />
       </div>
       <div className="hidden bg-muted lg:block">
