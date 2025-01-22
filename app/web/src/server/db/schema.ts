@@ -44,6 +44,7 @@ export const users = createTable("user", {
     mode: "timestamp",
   }).default(sql`CURRENT_TIMESTAMP`),
   image: text("image", { length: 255 }),
+  role: text("role", { length: 255 }).default("employee").notNull(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

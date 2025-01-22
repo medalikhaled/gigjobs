@@ -5,6 +5,7 @@ import { Meteors } from "~/components/animations/metors";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { redirect } from "next/navigation";
@@ -15,7 +16,9 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<"employee" | "employer">("employee");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   if (session) {
     redirect("/");
@@ -23,11 +26,16 @@ export default function Signup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
     try {
-      await register({ email, password, name });
+      await register({ email, password, name, role });
       window.location.href = "/login";
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,11 +87,32 @@ export default function Signup() {
                 Must be at least 8 characters long
               </p>
             </div>
+            <div className="grid gap-2">
+              <Label>I am a...</Label>
+              <RadioGroup 
+                value={role} 
+                onValueChange={(value) => setRole(value as "employee" | "employer")}
+                className="grid grid-cols-2 gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="employee" id="employee" />
+                  <Label htmlFor="employee">Job Seeker</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="employer" id="employer" />
+                  <Label htmlFor="employer">Employer</Label>
+                </div>
+              </RadioGroup>
+            </div>
             {error && (
               <p className="text-sm text-red-500">{error}</p>
             )}
-            <Button type="submit" className="w-full hover:bg-indigo-500">
-              Sign Up
+            <Button 
+              type="submit" 
+              className="w-full hover:bg-indigo-500"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating account..." : "Sign Up"}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">

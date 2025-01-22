@@ -11,11 +11,12 @@ const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   name: z.string().optional(),
+  role: z.enum(["employee", "employer"]),
 });
 
 export async function register(data: z.infer<typeof registerSchema>) {
   try {
-    const { email, password, name } = registerSchema.parse(data);
+    const { email, password, name, role } = registerSchema.parse(data);
 
     // Check if user already exists
     const existingUser = await db.query.users.findFirst({
@@ -35,6 +36,7 @@ export async function register(data: z.infer<typeof registerSchema>) {
       email,
       name,
       password: hashedPassword,
+      role,
     });
 
     return { success: true };

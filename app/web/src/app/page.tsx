@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useAuthStore } from "~/stores/authStore";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { SparklesCore } from "~/components/animations/sparkles";
@@ -16,19 +17,29 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 
 export default function HomePage() {
-  const { data: session, status } = useSession();
+  const { data: sessionData, status } = useSession();
   const router = useRouter();
   const { coordinates, keywords: storedKeywords } = useLocationStore();
   const [jobSearch, setJobSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const { user, setUser } = useAuthStore();
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
-  }, [status, router]);
+    if (sessionData?.user) {
+      setUser({
+        id: sessionData.user.id,
+        email: sessionData.user.email!,
+        name: sessionData.user.name,
+        image: sessionData.user.image,
+        role: sessionData.user.role,
+      });
+    }
+  }, [status, sessionData, router, setUser]);
 
-  if (status === "loading") {
+  if (status === "loading" || !user) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background">
         <div className="animate-pulse">Loading...</div>
@@ -59,6 +70,9 @@ export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-background text-foreground">
       <HeaderSparkles />
+      <h2 className="mt-4 text-center text-xl font-semibold">
+        {user.role === "employer" ? "Find the Best Talent" : "Find Your Dream Job"}
+      </h2>
       <section className="flex w-full flex-1 flex-col items-center justify-center px-4 py-8">
         <Meteors
           number={50}
@@ -98,11 +112,6 @@ export default function HomePage() {
                 <MagnifyingGlassIcon className="h-5 w-5" />
               </Button>
             </div>
-            {storedKeywords && (
-              <div className="absolute -bottom-6 left-0 text-xs text-muted-foreground">
-                Keywords: {storedKeywords}
-              </div>
-            )}
           </div>
         </div>
 

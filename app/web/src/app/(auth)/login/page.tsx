@@ -6,7 +6,8 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuthStore } from "~/stores/authStore";
 import { redirect, useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -20,6 +21,21 @@ export default function LoginPage() {
   if (session) {
     redirect("/");
   }
+
+  const setUser = useAuthStore((state) => state.setUser);
+  const { data: sessionData } = useSession();
+
+  useEffect(() => {
+    if (sessionData?.user) {
+      setUser({
+        id: sessionData.user.id,
+        email: sessionData.user.email!,
+        name: sessionData.user.name,
+        image: sessionData.user.image,
+        role: sessionData.user.role,
+      });
+    }
+  }, [sessionData, setUser]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
